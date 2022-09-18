@@ -4,11 +4,9 @@ import com.algaworks.algalog.algalogapi.domain.model.Client;
 import com.algaworks.algalog.algalogapi.domain.repository.ClientRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,5 +36,34 @@ public class ClientController {
         //    return ResponseEntity.ok(client.get());
         //}
         //return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Client create(@RequestBody Client client) {
+        return clientRepository.save(client);
+
+    }
+
+    @PutMapping("/{clientId}")
+    public ResponseEntity<Client> update(@RequestBody Client client, @PathVariable Long clientId) {
+        if(!clientRepository.existsById(clientId)){
+            return ResponseEntity.notFound().build();
+        }
+
+        client.setId(clientId);
+        client = clientRepository.save(client);
+        return ResponseEntity.ok(client);
+    }
+
+
+    @DeleteMapping("/{clientId}")
+    public ResponseEntity<Void> delete(@PathVariable Long clientId) {
+        if(!clientRepository.existsById(clientId)){
+            return ResponseEntity.notFound().build();
+        }
+
+        clientRepository.deleteById(clientId);
+        return ResponseEntity.noContent().build();
     }
 }
