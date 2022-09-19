@@ -2,6 +2,7 @@ package com.algaworks.algalog.algalogapi.api.controller;
 
 import com.algaworks.algalog.algalogapi.domain.model.Client;
 import com.algaworks.algalog.algalogapi.domain.repository.ClientRepository;
+import com.algaworks.algalog.algalogapi.domain.service.ClientService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,8 @@ public class ClientController {
 
     @Autowired
     private ClientRepository clientRepository;
+
+    private ClientService clientService;
 
     @GetMapping
     public List<Client> index() {
@@ -42,7 +45,7 @@ public class ClientController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Client create(@Valid @RequestBody Client client) {
-        return clientRepository.save(client);
+        return clientService.save(client);
 
     }
 
@@ -53,7 +56,7 @@ public class ClientController {
         }
 
         client.setId(clientId);
-        client = clientRepository.save(client);
+        client = clientService.save(client);
         return ResponseEntity.ok(client);
     }
 
@@ -64,7 +67,7 @@ public class ClientController {
             return ResponseEntity.notFound().build();
         }
 
-        clientRepository.deleteById(clientId);
+        clientService.delete(clientId);
         return ResponseEntity.noContent().build();
     }
 }
