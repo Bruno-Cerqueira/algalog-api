@@ -13,6 +13,11 @@ import javax.transaction.Transactional;
 public class ClientService {
     private ClientRepository clientRepository;
 
+    public Client search(Long clientId) {
+        return clientRepository.findById(clientId)
+                .orElseThrow(() -> new BusinessException("Cliente não encontrado"));
+    }
+
     @Transactional
     public Client save(Client client) {
         boolean usedEmail = clientRepository.findByEmail(client.getEmail())
