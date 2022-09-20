@@ -1,6 +1,8 @@
 package com.algaworks.algalog.algalogapi.api.controller;
 
 
+import com.algaworks.algalog.algalogapi.api.assembler.DeliveryAssembler;
+import com.algaworks.algalog.algalogapi.api.model.DeliveryModel;
 import com.algaworks.algalog.algalogapi.domain.model.Delivery;
 import com.algaworks.algalog.algalogapi.domain.repository.DeliveryRepository;
 import com.algaworks.algalog.algalogapi.domain.service.DeliveryService;
@@ -18,6 +20,7 @@ import java.util.List;
 public class DeliveryController {
     private DeliveryService deliveryService;
     private DeliveryRepository deliveryRepository;
+    private DeliveryAssembler deliveryAssembler;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -26,14 +29,14 @@ public class DeliveryController {
     }
 
     @GetMapping
-    public List<Delivery> list() {
-        return deliveryRepository.findAll();
+    public List<DeliveryModel> list() {
+        return deliveryAssembler.toCollectionModel(deliveryRepository.findAll());
     }
 
     @GetMapping("/deliveryId")
-    public ResponseEntity<Delivery> find(@PathVariable Long deliveryId) {
+    public ResponseEntity<DeliveryModel> find(@PathVariable Long deliveryId) {
         return deliveryRepository.findById(deliveryId)
-                .map(ResponseEntity::ok)
+                .map(delivery -> ResponseEntity.ok(deliveryAssembler.toModel(delivery)))
                 .orElse(ResponseEntity.notFound().build());
     }
 }
