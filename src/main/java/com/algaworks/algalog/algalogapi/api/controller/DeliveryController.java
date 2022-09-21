@@ -33,7 +33,7 @@ public class DeliveryController {
         return deliveryAssembler.toCollectionModel(deliveryRepository.findAll());
     }
 
-    @GetMapping("/deliveryId")
+    @GetMapping("/{deliveryId}")
     public ResponseEntity<DeliveryModel> find(@PathVariable Long deliveryId) {
         return deliveryRepository.findById(deliveryId)
                 .map(delivery -> ResponseEntity.ok(deliveryAssembler.toModel(delivery)))
